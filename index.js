@@ -8,12 +8,12 @@ app.use(express.json());
 
 app.use(express.static(path.join(__dirname, 'public')));
 
-// CONFIGURAÇÃO DO BANCO DE DADOS NA NUVEM (AIVEN)
 const db = mysql.createConnection({
     host: 'mysql-3f67d6d1-luisfelipesantana64-5ee9.h.aivencloud.com',
     port: 24871,
-    user: 'avnadmin',               
+    user: 'avnadmin',              
     password: 'AVNS_27RQmimhjz4xT_Mdpe_', 
+    database: 'defaultdb',
     ssl: {
         rejectUnauthorized: false 
     }
@@ -27,7 +27,6 @@ db.connect((err) => {
     }
 });
 
-
 app.get('/api/itens', (req, res) => {
     const sql = 'SELECT * FROM itens';
     db.query(sql, (err, results) => {
@@ -38,7 +37,6 @@ app.get('/api/itens', (req, res) => {
         res.json(results);
     });
 });
-
 
 app.post('/salvar', (req, res) => {
     const { nome, categoria, descricao, preco_nota } = req.body;
@@ -53,7 +51,6 @@ app.post('/salvar', (req, res) => {
     });
 });
 
-
 app.delete('/api/itens/:id', (req, res) => {
     const { id } = req.params;
     const sql = 'DELETE FROM itens WHERE id = ?';
@@ -66,7 +63,6 @@ app.delete('/api/itens/:id', (req, res) => {
         res.json({ message: 'Deletado com sucesso!' });
     });
 });
-
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
