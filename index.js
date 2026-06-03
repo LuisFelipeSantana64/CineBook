@@ -8,18 +8,22 @@ app.use(express.json());
 
 app.use(express.static(path.join(__dirname, 'public')));
 
+// CONFIGURAÇÃO DO BANCO DE DADOS NA NUVEM (AIVEN)
 const db = mysql.createConnection({
-    host: 'localhost',
-    user: 'root',               
-    password: '123456',   
-    database: 'meu_catalogo_db'
+    host: 'mysql-3f67d6d1-luisfelipesantana64-5ee9.h.aivencloud.com',
+    port: 24871,
+    user: 'avnadmin',               
+    password: 'AVNS_27RQmimhjz4xT_Mdpe_', 
+    ssl: {
+        rejectUnauthorized: false 
+    }
 });
 
 db.connect((err) => {
     if (err) {
-        console.error('Erro ao conectar ao banco de dados (Local):', err.message);
+        console.error('Erro ao conectar ao banco de dados na nuvem:', err.message);
     } else {
-        console.log('Conectado ao banco de dados MySQL com sucesso!');
+        console.log('Conectado ao banco de dados MySQL na nuvem com sucesso!');
     }
 });
 
@@ -48,6 +52,7 @@ app.post('/salvar', (req, res) => {
         res.redirect('/'); 
     });
 });
+
 
 app.delete('/api/itens/:id', (req, res) => {
     const { id } = req.params;
