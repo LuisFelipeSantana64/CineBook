@@ -1,4 +1,4 @@
-// 1. CARREGAMENTO DE VARIÁVEIS (Primeira linha sempre)
+
 require('dotenv').config();
 
 const path = require('path');
@@ -6,14 +6,13 @@ const express = require('express');
 const mysql = require('mysql2');
 const app = express();
 
-// 2. MIDDLEWARES DE PARSE (Obrigatório vir antes de arquivos estáticos e rotas!)
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// 3. ARQUIVOS ESTÁTICOS
+
 app.use(express.static(path.join(__dirname, 'public')));
 
-// 4. CONFIGURAÇÃO DO POOL COM O BANCO
+
 const db = mysql.createPool({
     host: process.env.DB_HOST,
     port: process.env.DB_PORT,
@@ -28,7 +27,6 @@ const db = mysql.createPool({
     }
 });
 
-// 5. TESTE DE CONEXÃO
 db.getConnection((err, connection) => {
     if (err) {
         console.error('❌ ERRO CRÍTICO: Não foi possível conectar ao Pool do Aiven!');
@@ -46,11 +44,6 @@ db.getConnection((err, connection) => {
     }
 });
 
-// ==========================================================================
-// ROTAS DA APLICAÇÃO
-// ==========================================================================
-
-// ROTA: Cadastro de Usuário
 app.post('/api/auth/cadastro', (req, res) => {
     const { nome, email, senha } = req.body;
     
@@ -73,7 +66,6 @@ app.post('/api/auth/cadastro', (req, res) => {
     });
 });
 
-// ROTA: Login de Usuário
 app.post('/api/auth/login', (req, res) => {
     const { email, senha } = req.body;
     
@@ -94,14 +86,9 @@ app.post('/api/auth/login', (req, res) => {
     });
 });
 
-// ==========================================================================
-// ROTA ATUALIZADA: LISTAR ITENS COM INNER JOIN
-// ==========================================================================
 app.get('/api/itens', (req, res) => {
     const usuarioLogadoId = req.headers['x-user-id'] || 0;
     
-    // Mudamos o comando SQL para cruzar os dados com a tabela de usuários 
-    // e trazer o campo 'nome_usuario' preenchido corretamente.
     const sql = `
         SELECT 
             itens.id, 
@@ -144,7 +131,6 @@ app.post('/salvar', (req, res) => {
     });
 });
 
-// ROTA: Deletar Item
 app.delete('/api/itens/:id', (req, res) => {
     const id = req.params.id;
     const sql = 'DELETE FROM itens WHERE id = ?';
@@ -157,7 +143,6 @@ app.delete('/api/itens/:id', (req, res) => {
     });
 });
 
-// INICIALIZAÇÃO
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
     console.log(`Servidor rodando perfeitamente em http://localhost:${PORT}`);
