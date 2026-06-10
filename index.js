@@ -1,6 +1,9 @@
+// Carrega as variáveis do arquivo .env (DEVE SER A PRIMEIRA LINHA DO CÓDIGO)
+require('dotenv').config();
+
 const path = require('path');
 const express = require('express');
-const mysql = require('mysql2'); // Mantém o mesmo require
+const mysql = require('mysql2');
 const app = express();
 
 app.use(express.urlencoded({ extended: true }));
@@ -9,15 +12,15 @@ app.use(express.json());
 // Garante que os arquivos da pasta public (HTML, CSS, JS) sejam servidos corretamente
 app.use(express.static(path.join(__dirname, 'public')));
 
-// MODIFICADO: Agora usando createPool para evitar conexões caídas/fechadas!
+// CONFIGURAÇÃO SEGURA DO POOL COM VARIÁVEIS DE AMBIENTE
 const db = mysql.createPool({
-    host: 'mysql-3f67d6d1-luisfelipesantana64-5ee9.h.aivencloud.com',
-    port: 24871,
-    user: 'avnadmin',              
-    password: 'AVNS_27RQmimhjz4xT_Mdpe_', 
-    database: 'defaultdb',
-    waitForConnections: true,    // Aguarda uma conexão liberar se o banco estiver cheio
-    connectionLimit: 10,         // Limite de até 10 conexões simultâneas prontas para uso
+    host: process.env.DB_HOST,
+    port: process.env.DB_PORT,
+    user: process.env.DB_USER,
+    password: process.env.DB_PASSWORD,
+    database: process.env.DB_NAME,
+    waitForConnections: true,
+    connectionLimit: 10,
     queueLimit: 0,
     ssl: {
         rejectUnauthorized: false // CRUCIAL para o Aiven aceitar conexões externas
@@ -35,8 +38,7 @@ db.getConnection((err, connection) => {
         
         // Teste de comando usando a conexão ativa do Pool
         connection.query('SELECT 1 + 1 AS teste', (testErr) => {
-            // Libera a conexão de volta para o pool após o teste
-            connection.release(); 
+            connection.release(); // Libera a conexão de volta para o pool após o teste
             
             if (testErr) {
                 console.error('❌ O banco conectou, mas falhou ao executar comandos:', testErr.message);
@@ -135,8 +137,9 @@ app.post('/salvar', (req, res) => {
 });
 
 // 5. ROTA: Deletar Item do Catálogo
-app.delete('/api/itens/:id', (req, res) => {
-    const { id } = req.params;
+app.delete('/api/itens/:id', (req, id_ou_res) => {
+    const res = id_ou_res; // Tratamento simples de parâmetros
+    const id = req.params.id;
     const sql = 'DELETE FROM itens WHERE id = ?';
 
     db.query(sql, [id], (err, result) => {
