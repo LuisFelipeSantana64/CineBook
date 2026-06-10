@@ -34,16 +34,8 @@ function loadPosts() {
                 <h3>${post.nome}</h3>
                 <p><strong>Categoria:</strong> ${post.categoria}</p>
                 <p><em>"${post.descricao}"</em></p>
-                
-                <p style="font-size: 13px; color: #777; margin-top: 8px;">
-                    <strong>Postado por:</strong> ${post.nome_usuario}
-                </p>
-
                 <p style="font-size: 18px; margin: 10px 0;">${estrelas}</p>
-                
-                ${post.e_do_usuario ? `
-                    <button class="btn-excluir" onclick="excluirItem(${post.id})">Excluir</button>
-                ` : ''}
+                <button class="btn-excluir" onclick="excluirItem(${post.id})">Excluir</button>
             </div>
          `;
      });
