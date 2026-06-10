@@ -156,7 +156,6 @@ app.delete('/api/itens/:id', (req, res) => {
     });
 });
 
-// INICIALIZAÇÃO
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
     console.log(`Servidor rodando perfeitamente em http://localhost:${PORT}`);
