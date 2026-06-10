@@ -1,29 +1,185 @@
-/* Adicione isso ao fim do seu arquivo style.css existente */
+/* ==========================================================================
+   1. ESTILOS GERAIS E RESET
+   ========================================================================== */
+body {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    background-color: #f4f6f8;
+    margin: 0;
+    padding: 0; 
+    color: #333;
+}
 
+h1 {
+    text-align: center;
+    background-color: #2c3e50;
+    color: white;
+    padding: 20px;
+    margin: 0; 
+    font-size: 28px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+h2 {
+    text-align: center;
+    color: #2c3e50; 
+    margin-top: 0;
+    margin-bottom: 20px;
+    font-size: 22px;
+}
+
+hr {
+    border: 0;
+    height: 1px;
+    background: #ddd;
+    margin: 40px 0;
+}
+
+/* ==========================================================================
+   2. FORMULÁRIOS (Login, Cadastro e Nova Review)
+   ========================================================================== */
+form {
+    background-color: white;
+    width: 100%;
+    max-width: 400px;
+    margin: 40px auto;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05); 
+    box-sizing: border-box;
+}
+
+/* Links utilitários dentro dos formulários de login/cadastro */
+form p {
+    font-size: 14px;
+    color: #666;
+}
+
+form a {
+    color: #3498db;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+form a:hover {
+    text-decoration: underline;
+}
+
+/* Inputs, Selects e Textareas */
+input, select {
+    width: 100%;
+    padding: 12px;
+    margin: 8px 0 20px 0;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    box-sizing: border-box; 
+    font-size: 15px;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+input:focus, select:focus {
+    border-color: #3498db;
+    outline: none;
+    box-shadow: 0 0 5px rgba(52, 152, 219, 0.3);
+}
+
+/* ==========================================================================
+   3. BOTÕES
+   ========================================================================== */
+button {
+    width: 100%;
+    padding: 12px;
+    background-color: #3498db;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.1s ease; 
+}
+
+button:hover {
+    background-color: #2980b9; 
+}
+
+button:active {
+    transform: scale(0.98);
+}
+
+.btn-excluir {
+    background-color: #e74c3c;
+    margin-top: 15px;
+    padding: 8px;
+    font-size: 14px;
+}
+
+.btn-excluir:hover {
+    background-color: #c0392b;
+}
+
+/* ==========================================================================
+   4. GRADE DE CARDS E CARDS DE REVIEW
+   ========================================================================== */
+.grade-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 25px;
+    max-width: 1200px;
+    margin: 30px auto;
+    padding: 0 20px;
+    box-sizing: border-box;
+}
+
+.card {
+    background: white;
+    border: 1px solid #e0e0e0;
+    border-radius: 10px;
+    padding: 25px;
+    position: relative; 
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.card:hover {
+    transform: translateY(-5px); 
+    box-shadow: 0 12px 20px rgba(0,0,0,0.08);
+}
+
+.card h3 {
+    margin-top: 0;
+    margin-bottom: 10px;
+    color: #2c3e50;
+    font-size: 20px;
+}
+
+.card p {
+    margin: 5px 0;
+    font-size: 15px;
+    color: #555;
+}
+
+/* ==========================================================================
+   5. REGRAS DE DESTAQUE (ITENS DO USUÁRIO LOGADO)
+   ========================================================================== */
 .card-dono {
-    background-color: #fffdf0 !important; /* Fundo suave amarelado */
-    border: 2px solid #f1c40f !important; /* Borda dourada marcante */
+    background-color: #fffdf0 !important; /* Amarelo bem suave de fundo */
+    border: 2px solid #f1c40f !important; /* Borda dourada viva */
 }
 
 .badge-sua {
     position: absolute;
-    top: 10px;
-    right: 10px;
+    top: -12px;
+    right: 15px;
     background-color: #f1c40f;
     color: #2c3e50;
     font-size: 11px;
     font-weight: bold;
-    padding: 3px 8px;
+    padding: 4px 10px;
     border-radius: 20px;
     text-transform: uppercase;
-}
-
-/* Ajuste no seletor existente para ignorar erro de escrita que estava no seu original */
-.grade-cards {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 20px;
-    max-width: 1200px;
-    margin: 30px auto;
-    padding: 0 20px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    letter-spacing: 0.5px;
 }
