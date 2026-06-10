@@ -1,16 +1,8 @@
 node_modules/
-# Ocultar o arquivo de configurações e chaves secretas do banco
 .env
-
-# Ignorar a pasta gigante de dependências do Node (o Render baixa tudo sozinho lá)
-node_modules/
-
-# Ignorar arquivos de log de erros do npm
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
-
-# Ignorar pastas de configuração do próprio VS Code ou sistema operacional
 .vscode/
 .DS_Store
 Thumbs.db
