@@ -1,6 +1,6 @@
 const path = require('path');
 const express = require('express');
-const mysql = require('mysql2');
+const mysql = require('mysql2'); // Mantém o mesmo require
 const app = express();
 
 app.use(express.urlencoded({ extended: true }));
@@ -9,33 +9,39 @@ app.use(express.json());
 // Garante que os arquivos da pasta public (HTML, CSS, JS) sejam servidos corretamente
 app.use(express.static(path.join(__dirname, 'public')));
 
-// CONFIGURAÇÃO DA CONEXÃO COM O AIVEN
-const db = mysql.createConnection({
+// MODIFICADO: Agora usando createPool para evitar conexões caídas/fechadas!
+const db = mysql.createPool({
     host: 'mysql-3f67d6d1-luisfelipesantana64-5ee9.h.aivencloud.com',
     port: 24871,
     user: 'avnadmin',              
     password: 'AVNS_27RQmimhjz4xT_Mdpe_', 
     database: 'defaultdb',
+    waitForConnections: true,    // Aguarda uma conexão liberar se o banco estiver cheio
+    connectionLimit: 10,         // Limite de até 10 conexões simultâneas prontas para uso
+    queueLimit: 0,
     ssl: {
         rejectUnauthorized: false // CRUCIAL para o Aiven aceitar conexões externas
     }
 });
 
-// TESTE REAL DE CONEXÃO (O bloco solicitado para diagnóstico)
-db.connect((err) => {
+// TESTE REAL DE CONEXÃO COM O POOL
+db.getConnection((err, connection) => {
     if (err) {
-        console.error('❌ ERRO CRÍTICO: Não foi possível conectar ao Aiven!');
-        console.error('Detalhes do erro do MySQL:', err.message);
+        console.error('❌ ERRO CRÍTICO: Não foi possível conectar ao Pool do Aiven!');
+        console.error('Detalhes do erro:', err.message);
         console.error('Código do erro:', err.code);
     } else {
-        console.log('🚀 SUCESSO: O Node.js está conectado e autenticado no banco do Aiven!');
+        console.log('🚀 SUCESSO: O Node.js criou o Pool e está autenticado no Aiven!');
         
-        // Teste extra: Fazer uma mini-consulta de segurança para ter 100% de certeza
-        db.query('SELECT 1 + 1 AS teste', (testErr, results) => {
+        // Teste de comando usando a conexão ativa do Pool
+        connection.query('SELECT 1 + 1 AS teste', (testErr) => {
+            // Libera a conexão de volta para o pool após o teste
+            connection.release(); 
+            
             if (testErr) {
                 console.error('❌ O banco conectou, mas falhou ao executar comandos:', testErr.message);
             } else {
-                console.log('✅ Banco de dados respondendo a comandos perfeitamente!');
+                console.log('✅ Banco de dados respondendo a comandos via Pool perfeitamente!');
             }
         });
     }
