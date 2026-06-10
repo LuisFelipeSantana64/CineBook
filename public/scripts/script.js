@@ -1,18 +1,40 @@
+const usuarioLogado = JSON.parse(localStorage.getItem('usuarioLogado'));
+
+if (usuarioLogado) {
+    document.getElementById('nomeUsuarioHeader').innerText = usuarioLogado.nome;
+    document.getElementById('inputUsuarioId').value = usuarioLogado.id;
+}
+
 document.getElementById('loadPostsBtn').addEventListener('click', loadPosts);
+document.getElementById('btnSair').addEventListener('click', () => {
+    localStorage.removeItem('usuarioLogado');
+    window.location.href = 'login.html';
+});
 
 function loadPosts() {
- fetch('/api/itens')
+ fetch('/api/itens', {
+     method: 'GET',
+     headers: {
+         'Content-Type': 'application/json',
+         'X-User-Id': usuarioLogado ? usuarioLogado.id : 0 // Passando o ID no cabeçalho
+     }
+ })
  .then(response => response.json())
  .then(posts => {
      let output = '';
      
      posts.forEach(post => {
+         // Se for do usuário ganha a classe 'card-dono', senão fica padrão
+         const classeDono = post.e_do_usuario ? 'card-dono' : '';
+         const estrelas = '⭐'.repeat(post.preco_nota);
+
          output += `
-            <div class="card">
+            <div class="card ${classeDono}">
+                ${post.e_do_usuario ? '<span class="badge-sua">Sua Review</span>' : ''}
                 <h3>${post.nome}</h3>
                 <p><strong>Categoria:</strong> ${post.categoria}</p>
-                <p>${post.descricao}</p>
-                <p style="color: #e74c3c; font-weight: bold;">${post.preco_nota}</p>
+                <p><em>"${post.descricao}"</em></p>
+                <p style="font-size: 18px; margin: 10px 0;">${estrelas}</p>
                 <button class="btn-excluir" onclick="excluirItem(${post.id})">Excluir</button>
             </div>
          `;
@@ -35,3 +57,6 @@ function excluirItem(id) {
         .catch(error => console.error('Erro ao deletar:', error));
     }
 }
+
+// Carrega automaticamente os posts ao abrir a tela principal
+loadPosts();

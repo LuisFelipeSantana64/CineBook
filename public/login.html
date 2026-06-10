@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - CineBook Tracker</title>
+    <link rel="stylesheet" href="estilo/style.css">
+</head>
+<body>
+    <script>
+        if(localStorage.getItem('usuarioLogado')) { window.location.href = '/'; }
+    </script>
+
+    <h1>CineBook Tracker</h1>
+    <form id="loginForm">
+        <h2>Acessar Minha Conta</h2>
+        <input type="email" id="email" required placeholder="Seu E-mail">
+        <input type="password" id="senha" required placeholder="Sua Senha">
+        <button type="submit">Entrar</button>
+        <p style="text-align: center; margin-top: 15px;">Não tem conta? <a href="cadastro.html">Cadastre-se</a></p>
+    </form>
+
+    <script>
+        document.getElementById('loginForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const email = document.getElementById('email').value;
+            const senha = document.getElementById('senha').value;
+
+            fetch('/api/auth/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email, senha })
+            })
+            .then(res => res.json())
+            .then(data => {
+                if(data.error) { alert(data.error); }
+                else {
+                    localStorage.setItem('usuarioLogado', JSON.stringify(data.user));
+                    window.location.href = '/';
+                }
+            });
+        });
+    </script>
+</body>
+</html>

@@ -3,27 +3,54 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Meu Catálogo</title>
+    <title>Meu Catálogo de Filmes e Livros</title>
     <link rel="stylesheet" href="estilo/style.css">
 </head>
 <body>
-    <h1>Meu Catálogo</h1>
+    <script>
+        // Bloqueio de Segurança no Front-end antes de carregar o HTML
+        if (!localStorage.getItem('usuarioLogado')) { window.location.href = 'login.html'; }
+    </script>
+
+    <div style="display: flex; justify-content: space-between; align-items: center; background-color: #2c3e50; padding: 10px 30px;">
+        <h1 style="background: none; padding: 0; font-size: 24px; text-align: left;">CineBook Tracker</h1>
+        <div style="color: white;">
+            Olá, <span id="nomeUsuarioHeader" style="font-weight: bold; color: #3498db;"></span>!
+            <button id="btnSair" style="width: auto; display: inline-block; padding: 6px 12px; margin-left: 15px; background-color: #e74c3c; font-size: 13px;">Sair</button>
+        </div>
+    </div>
     
-    <form action="/salvar" method="POST">
-        <h2>Cadastrar Novo Item</h2>
+    <form action="/salvar" method="POST" id="formCadastroObra">
+        <h2>Cadastrar Nova Review</h2>
         
-        <input type="text" name="nome" required placeholder="Nome do Item">
-        <input type="text" name="categoria" required placeholder="Categoria (Filme, Livro...)">
-        <input type="text" name="descricao" required placeholder="Descrição/Resumo">
-        <input type="text" name="preco_nota" required placeholder="Preço ou Nota">
+        <input type="hidden" name="usuario_id" id="inputUsuarioId">
+
+        <input type="text" name="nome" required placeholder="Título do Filme ou Livro">
         
-        <button type="submit">Cadastrar Item</button>
+        <select name="categoria" required style="width: 100%; padding: 10px; margin-bottom: 15px; border-radius:6px; border: 1px solid #ccc;">
+            <option value="" disabled selected>Selecione a Categoria</option>
+            <option value="Filme">Filme</option>
+            <option value="Livro">Livro</option>
+        </select>
+
+        <input type="text" name="descricao" required placeholder="O que você achou? (Resenha curta)">
+        
+        <select name="preco_nota" required style="width: 100%; padding: 10px; margin-bottom: 15px; border-radius:6px; border: 1px solid #ccc;">
+            <option value="" disabled selected>Sua Nota (1 a 5 Estrelas)</option>
+            <option value="5">⭐⭐⭐⭐⭐ (Excelente)</option>
+            <option value="4">⭐⭐⭐⭐ (Muito Bom)</option>
+            <option value="3">⭐⭐⭐ (Bom / Regular)</option>
+            <option value="2">⭐⭐ (Ruim)</option>
+            <option value="1">⭐ (Péssimo)</option>
+        </select>
+        
+        <button type="submit">Adicionar ao Histórico</button>
     </form>
 
     <hr>
 
     <div style="text-align: center; margin: 20px;">
-        <button id="loadPostsBtn">Carregar Catálogo</button>
+        <button id="loadPostsBtn" style="max-width: 200px;">Atualizar Catálogo</button>
     </div>
 
     <div id="postList" class="grade-cards"></div>

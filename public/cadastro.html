@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro - CineBook Tracker</title>
+    <link rel="stylesheet" href="estilo/style.css">
+</head>
+<body>
+    <h1>CineBook Tracker</h1>
+    <form id="cadastroForm">
+        <h2>Criar Nova Conta</h2>
+        <input type="text" id="nome" required placeholder="Seu Nome Completo">
+        <input type="email" id="email" required placeholder="Seu E-mail">
+        <input type="password" id="senha" required placeholder="Sua Senha">
+        <button type="submit">Cadastrar</button>
+        <p style="text-align: center; margin-top: 15px;">Já tem conta? <a href="login.html">Faça Login</a></p>
+    </form>
+
+    <script>
+        document.getElementById('cadastroForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const nome = document.getElementById('nome').value;
+            const email = document.getElementById('email').value;
+            const senha = document.getElementById('senha').value;
+
+            fetch('/api/auth/cadastro', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ nome, email, senha })
+            })
+            .then(res => res.json())
+            .then(data => {
+                if(data.error) { alert(data.error); }
+                else {
+                    alert('Cadastro realizado! Redirecionando para o login...');
+                    window.location.href = 'login.html';
+                }
+            });
+        });
+    </script>
+</body>
+</html>
