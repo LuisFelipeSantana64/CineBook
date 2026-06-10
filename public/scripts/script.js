@@ -16,7 +16,7 @@ function loadPosts() {
      method: 'GET',
      headers: {
          'Content-Type': 'application/json',
-         'X-User-Id': usuarioLogado ? usuarioLogado.id : 0 // Passando o ID no cabeçalho
+         'X-User-Id': usuarioLogado ? usuarioLogado.id : 0 
      }
  })
  .then(response => response.json())
@@ -24,9 +24,8 @@ function loadPosts() {
      let output = '';
      
      posts.forEach(post => {
-         // Se for do usuário ganha a classe 'card-dono', senão fica padrão
          const classeDono = post.e_do_usuario ? 'card-dono' : '';
-         const estrelas = '⭐'.repeat(post.preco_nota);
+         const estrelas = ''.repeat(post.preco_nota);
 
          output += `
             <div class="card ${classeDono}">
@@ -65,6 +64,4 @@ function excluirItem(id) {
         .catch(error => console.error('Erro ao deletar:', error));
     }
 }
-
-// Carrega automaticamente os posts ao abrir a tela principal
 loadPosts();
