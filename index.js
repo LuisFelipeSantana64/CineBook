@@ -29,16 +29,16 @@ const db = mysql.createPool({
 
 db.getConnection((err, connection) => {
     if (err) {
-        console.error('❌ ERRO CRÍTICO: Não foi possível conectar ao Pool do Aiven!');
+        console.error('ERRO CRÍTICO: Não foi possível conectar ao Pool do Aiven!');
         console.error('Detalhes do erro:', err.message);
     } else {
-        console.log('🚀 SUCESSO: O Node.js criou o Pool e está autenticado no Aiven!');
+        console.log('SUCESSO: O Node.js criou o Pool e está autenticado no Aiven!');
         connection.query('SELECT 1 + 1 AS teste', (testErr) => {
             connection.release();
             if (testErr) {
-                console.error('❌ Erro ao testar comandos:', testErr.message);
+                console.error('Erro ao testar comandos:', testErr.message);
             } else {
-                console.log('✅ Banco de dados respondendo perfeitamente via Pool!');
+                console.log('Banco de dados respondendo perfeitamente!');
             }
         });
     }
@@ -47,7 +47,7 @@ db.getConnection((err, connection) => {
 app.post('/api/auth/cadastro', (req, res) => {
     const { nome, email, senha } = req.body;
     
-    console.log("📥 Dados recebidos no servidor:", { nome, email, senha: senha ? "••••••••" : null });
+    console.log("Dados recebidos no servidor:", { nome, email, senha: senha ? "••••••••" : null });
     
     if (!nome || !email || !senha) {
         return res.status(400).json({ error: 'Todos os campos são obrigatórios.' });
@@ -56,7 +56,7 @@ app.post('/api/auth/cadastro', (req, res) => {
     const sql = 'INSERT INTO usuarios (nome, email, senha) VALUES (?, ?, ?)';
     db.query(sql, [nome, email, senha], (err, result) => {
         if (err) {
-            console.error("❌ Erro ao inserir usuário no banco:", err.message);
+            console.error("Erro ao inserir usuário no banco:", err.message);
             if (err.code === 'ER_DUP_ENTRY') {
                 return res.status(400).json({ error: 'Este e-mail já está cadastrado.' });
             }
@@ -76,7 +76,7 @@ app.post('/api/auth/login', (req, res) => {
     const sql = 'SELECT id, nome FROM usuarios WHERE email = ? AND senha = ?';
     db.query(sql, [email, senha], (err, results) => {
         if (err) {
-            console.error("❌ Erro ao buscar usuário no login:", err.message);
+            console.error("Erro ao buscar usuário no login:", err.message);
             return res.status(500).json({ error: 'Erro interno no servidor.' });
         }
         if (results.length === 0) {
@@ -104,7 +104,7 @@ app.get('/api/itens', (req, res) => {
     
     db.query(sql, (err, results) => {
         if (err) {
-            console.error("❌ Erro ao listar itens:", err.message);
+            console.error("Erro ao listar itens:", err.message);
             return res.status(500).send(err);
         }
         const itensTratados = results.map(item => ({
@@ -124,7 +124,7 @@ app.post('/salvar', (req, res) => {
     const sql = 'INSERT INTO itens (nome, categoria, descricao, preco_nota, usuario_id) VALUES (?, ?, ?, ?, ?)';
     db.query(sql, [nome, categoria, descricao, preco_nota, usuario_id], (err, result) => {
         if (err) {
-            console.error("❌ Erro ao salvar novo item:", err.message);
+            console.error("Erro ao salvar novo item:", err.message);
             return res.status(500).send(err);
         }
         res.redirect('/'); 
@@ -136,7 +136,7 @@ app.delete('/api/itens/:id', (req, res) => {
     const sql = 'DELETE FROM itens WHERE id = ?';
     db.query(sql, [id], (err, result) => {
         if (err) {
-            console.error("❌ Erro ao deletar item:", err.message);
+            console.error("Erro ao deletar item:", err.message);
             return res.status(500).send(err);
         }
         res.json({ message: 'Deletado com sucesso!' });
